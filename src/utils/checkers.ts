@@ -1,9 +1,11 @@
 import Joi from 'joi'
-import { NewUserConfig } from 'resources/user/user.model'
+import { NewUserConfig } from 'models/user.model'
 
 export const isNotNullish = <T>(payload: T | null | undefined): payload is T => payload !== undefined && payload !== null
 
-export const isValidCreateBody = Joi.object<NewUserConfig>().keys({
+export const isError = (error: unknown): error is Error => error instanceof Error
+
+export const isValidCreateUserBody = Joi.object<NewUserConfig>().keys({
   login: Joi
     .string()
     .alphanum()
@@ -25,4 +27,4 @@ export const isValidCreateBody = Joi.object<NewUserConfig>().keys({
     .boolean()
     .required()
 })
-export const isValidUpdateBody = isValidCreateBody
+export const isValidUpdateUserBody = isValidCreateUserBody

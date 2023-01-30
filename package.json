@@ -20,7 +20,7 @@
   "scripts": {
     "start": "nodemon",
     "build": "tsc",
-    "check:code": "eslint .",
+    "check:code": "eslint ./src",
     "check:types": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -38,6 +38,9 @@
   "dependencies": {
     "express": "^4.18.2",
     "joi": "^17.7.0",
+    "pg": "^8.9.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.28.0",
     "uuid": "^9.0.0"
   }
 }
