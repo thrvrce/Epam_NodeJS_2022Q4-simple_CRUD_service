@@ -22,7 +22,7 @@ export const getGroupById = async (id: string) => {
     const group = await Groups.findByPk(id)
 
     if (group === null) {
-      return { statusCode: 404, payload: { message: 'user with given uuid was not found' } }
+      return { statusCode: 404, payload: { message: 'group with given uuid was not found' } }
     }
 
     return { statusCode: 200, payload: { group } }

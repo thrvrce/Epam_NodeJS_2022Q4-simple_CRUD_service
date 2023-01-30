@@ -2,6 +2,7 @@ import express, { NextFunction, Response, Request } from 'express'
 
 import { usersRouter } from './routers/controllers/users.router'
 import { groupsRouter } from './routers/controllers/groups.router'
+import { userGroupsRouter } from './routers/controllers/userGroups.router'
 import createHttpError, { isErrorWithStatus } from './utils/createHttpError'
 import { connectToSequelizePostgresql } from './loaders/database/database'
 import { Users } from './models/users.model'
@@ -21,8 +22,9 @@ app.use('/', (req, res, next) => {
 })
 app.use('/users', usersRouter)
 app.use('/groups', groupsRouter)
+app.use('/userGroups', userGroupsRouter)
 app.use((req, res, next) => {
-  next(createHttpError(404, 'Page not found'))
+  next(createHttpError(404, 'route was not found'))
 })
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   if (isErrorWithStatus(err)) {
