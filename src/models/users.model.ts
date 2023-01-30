@@ -1,6 +1,7 @@
 import { Model, DataTypes, CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize'
 
 import { sequelizePostgresql } from '../loaders/database/database'
+
 interface UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
   id: CreationOptional<string>
   login: string

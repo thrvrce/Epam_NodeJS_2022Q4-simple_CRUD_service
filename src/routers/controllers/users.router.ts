@@ -1,16 +1,14 @@
 import { Router } from 'express'
 import {
-  createNewUser,
-  deleteUserById,
-  getAllUsers, getAutoSuggestUsers, getUserById, patchUserById
-
-} from '../../services/user.service'
+  createNewUser, deleteUserById, getAllUsers, getAutoSuggestUsers,
+  getUserById, patchUserById
+} from '../../services/users.service'
 import createHttpError from '../../utils/createHttpError'
 import { isError, isNotNullish } from '../../utils/checkers'
 
-export const userRouter = Router()
+export const usersRouter = Router()
 
-userRouter.get('/', (req, res, next) => {
+usersRouter.get('/', (req, res, next) => {
   getAllUsers()
     .then(({ statusCode, payload }) => {
       res.status(statusCode).json(payload)
@@ -20,7 +18,7 @@ userRouter.get('/', (req, res, next) => {
     })
 })
 
-userRouter.get('/user/:userId', (req, res, next) => {
+usersRouter.get('/user/:userId', (req, res, next) => {
   getUserById(req.params.userId)
     .then(({ statusCode, payload }) => {
       res.status(statusCode).json(payload)
@@ -30,7 +28,7 @@ userRouter.get('/user/:userId', (req, res, next) => {
     })
 })
 
-userRouter.post('/user', (req, res, next) => {
+usersRouter.post('/user', (req, res, next) => {
   createNewUser(req.body)
     .then(({ statusCode, payload }) => {
       res.status(statusCode).json(payload)
@@ -40,7 +38,7 @@ userRouter.post('/user', (req, res, next) => {
     })
 })
 
-userRouter.put('/user/:userId', (req, res, next) => {
+usersRouter.put('/user/:userId', (req, res, next) => {
   patchUserById(req.params.userId, req.body)
     .then(({ statusCode, payload }) => {
       res.status(statusCode).json(payload)
@@ -50,7 +48,7 @@ userRouter.put('/user/:userId', (req, res, next) => {
     })
 })
 
-userRouter.delete('/user/:userId', (req, res, next) => {
+usersRouter.delete('/user/:userId', (req, res, next) => {
   deleteUserById(req.params.userId)
     .then(({ statusCode, payload }) => {
       res.status(statusCode).json(payload)
@@ -60,7 +58,7 @@ userRouter.delete('/user/:userId', (req, res, next) => {
     })
 })
 
-userRouter.get('/AutoSuggestUsers', (req, res, next) => {
+usersRouter.get('/AutoSuggestUsers', (req, res, next) => {
   const { query: { limit, loginSubstring } } = req
 
   if (isNotNullish(limit) && typeof limit === 'string' && isNotNullish(loginSubstring) && typeof loginSubstring === 'string') {

@@ -1,13 +1,14 @@
 import express, { NextFunction, Response, Request } from 'express'
 
-import { userRouter } from './routers/controllers/user.router'
+import { usersRouter } from './routers/controllers/users.router'
+import { groupsRouter } from './routers/controllers/groups.router'
 import createHttpError, { isErrorWithStatus } from './utils/createHttpError'
 import { connectToSequelizePostgresql } from './loaders/database/database'
 
+const PORT = 3000
 const app = express()
 
 app.use(express.json())
-
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
     res.send('Service is running!')
@@ -15,13 +16,11 @@ app.use('/', (req, res, next) => {
     next()
   }
 })
-
-app.use('/users', userRouter)
-
+app.use('/users', usersRouter)
+app.use('/groups', groupsRouter)
 app.use((req, res, next) => {
   next(createHttpError(404, 'Page not found'))
 })
-
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   if (isErrorWithStatus(err)) {
     res.status(err.status)
@@ -32,8 +31,6 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
     res.json({ message })
   }
 })
-
-const PORT = 3000
 
 connectToSequelizePostgresql()
   .then((result) => {
