@@ -20,7 +20,7 @@ export type NewGroupConfig = Pick<GroupModel, 'name' | 'permissions'>
 
 export const Groups = sequelizePostgresql.define<GroupModel>('groups', {
   id: {
-    type: DataTypes.UUIDV4,
+    type: DataTypes.UUID,
     autoIncrement: true,
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4

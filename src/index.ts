@@ -4,6 +4,9 @@ import { usersRouter } from './routers/controllers/users.router'
 import { groupsRouter } from './routers/controllers/groups.router'
 import createHttpError, { isErrorWithStatus } from './utils/createHttpError'
 import { connectToSequelizePostgresql } from './loaders/database/database'
+import { Users } from './models/users.model'
+import { Groups } from './models/groups.model'
+import { UserGroups } from './models/userGroups.model'
 
 const PORT = 3000
 const app = express()
@@ -33,7 +36,17 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
 })
 
 connectToSequelizePostgresql()
-  .then((result) => {
+  .then(async () => {
+    Users.belongsToMany(Groups, { through: UserGroups })
+    Groups.belongsToMany(Users, { through: UserGroups })
+
+    return await Promise.all([
+      Users.sync(),
+      Groups.sync(),
+      UserGroups.sync()
+    ])
+  })
+  .then(() => {
     app.listen(PORT, () => console.log(`App is running on http://localhost:${PORT}`))
   })
   .catch((error: unknown) => {

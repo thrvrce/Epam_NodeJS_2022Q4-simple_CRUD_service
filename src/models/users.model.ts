@@ -14,7 +14,7 @@ export type NewUserConfig = Pick<UserModel, 'login' | 'password' | 'age' | 'isDe
 
 export const Users = sequelizePostgresql.define<UserModel>('users', {
   id: {
-    type: DataTypes.UUIDV4,
+    type: DataTypes.UUID,
     autoIncrement: true,
     primaryKey: true,
     defaultValue: DataTypes.UUIDV4
