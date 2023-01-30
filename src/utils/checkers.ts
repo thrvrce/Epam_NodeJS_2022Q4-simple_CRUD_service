@@ -1,5 +1,6 @@
 import Joi from 'joi'
-import { NewUserConfig } from 'models/user.model'
+import { NewUserConfig } from '../models/users.model'
+import { NewGroupConfig, GroupPermissions } from '../models/groups.model'
 
 export const isNotNullish = <T>(payload: T | null | undefined): payload is T => payload !== undefined && payload !== null
 
@@ -27,4 +28,20 @@ export const isValidCreateUserBody = Joi.object<NewUserConfig>().keys({
     .boolean()
     .required()
 })
+
 export const isValidUpdateUserBody = isValidCreateUserBody
+
+export const isValidCreateGroupBody = Joi.object<NewGroupConfig>().keys({
+  name: Joi
+    .string()
+    .alphanum()
+    .min(1)
+    .max(30)
+    .required(),
+  permissions: Joi
+    .array()
+    .items(Joi.string().required().valid(
+      GroupPermissions.delete, GroupPermissions.read, GroupPermissions.share, GroupPermissions.uploadFiles, GroupPermissions.write))
+})
+
+export const isValidUpdateGroupBody = isValidCreateGroupBody

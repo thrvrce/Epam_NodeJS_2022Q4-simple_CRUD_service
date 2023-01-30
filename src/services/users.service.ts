@@ -1,7 +1,7 @@
 import { validate } from 'uuid'
 
 import { isValidCreateUserBody, isValidUpdateUserBody } from '../utils/checkers'
-import { Users } from '../models/user.model'
+import { Users } from '../models/users.model'
 
 export const getAllUsers = async () => {
   try {
@@ -21,7 +21,7 @@ export const getUserById = async (id: string) => {
   try {
     const user = await Users.findByPk(id)
 
-    if (user == null) {
+    if (user === null) {
       return { statusCode: 404, payload: { message: 'user with given uuid was not found' } }
     }
 
@@ -97,7 +97,7 @@ export const deleteUserById = async (id: string) => {
 
     return { statusCode: 204, payload: { message: `User with id ${id} already was marked as deleted` } }
   } catch (error) {
-    throw new Error('Sequelize error during patchUserById execution')
+    throw new Error('Sequelize error during deleteUserById execution')
   }
 }
 

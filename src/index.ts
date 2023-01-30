@@ -1,13 +1,18 @@
 import express, { NextFunction, Response, Request } from 'express'
 
-import { userRouter } from './routers/controllers/user.router'
+import { usersRouter } from './routers/controllers/users.router'
+import { groupsRouter } from './routers/controllers/groups.router'
+import { userGroupsRouter } from './routers/controllers/userGroups.router'
 import createHttpError, { isErrorWithStatus } from './utils/createHttpError'
 import { connectToSequelizePostgresql } from './loaders/database/database'
+import { Users } from './models/users.model'
+import { Groups } from './models/groups.model'
+import { UserGroups } from './models/userGroups.model'
 
+const PORT = 3000
 const app = express()
 
 app.use(express.json())
-
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
     res.send('Service is running!')
@@ -15,13 +20,12 @@ app.use('/', (req, res, next) => {
     next()
   }
 })
-
-app.use('/users', userRouter)
-
+app.use('/users', usersRouter)
+app.use('/groups', groupsRouter)
+app.use('/userGroups', userGroupsRouter)
 app.use((req, res, next) => {
-  next(createHttpError(404, 'Page not found'))
+  next(createHttpError(404, 'route was not found'))
 })
-
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   if (isErrorWithStatus(err)) {
     res.status(err.status)
@@ -33,10 +37,18 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   }
 })
 
-const PORT = 3000
-
 connectToSequelizePostgresql()
-  .then((result) => {
+  .then(async () => {
+    Users.belongsToMany(Groups, { through: UserGroups })
+    Groups.belongsToMany(Users, { through: UserGroups })
+
+    return await Promise.all([
+      Users.sync(),
+      Groups.sync(),
+      UserGroups.sync()
+    ])
+  })
+  .then(() => {
     app.listen(PORT, () => console.log(`App is running on http://localhost:${PORT}`))
   })
   .catch((error: unknown) => {
