@@ -1,7 +1,7 @@
 type ErrorWithStatus = Error & { status: number }
 
-const createHttpError = (status: number, message: string): ErrorWithStatus => {
-  const error = new Error(message) as ErrorWithStatus
+const createHttpError = (status: number, message: string, cause?: Error): ErrorWithStatus => {
+  const error = new Error(message, cause?.message !== undefined ? { cause: cause.message } : undefined) as ErrorWithStatus
   error.status = status
   return error
 }

@@ -1,7 +1,8 @@
 import express, { NextFunction, Response, Request } from 'express'
 
-import { userRouter } from './resources/user/user.router'
+import { userRouter } from './routers/controllers/user.router'
 import createHttpError, { isErrorWithStatus } from './utils/createHttpError'
+import { connectToSequelizePostgresql } from './loaders/database/database'
 
 const app = express()
 
@@ -33,4 +34,12 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
 })
 
 const PORT = 3000
-app.listen(PORT, () => console.log(`App is running on http://localhost:${PORT}`))
+
+connectToSequelizePostgresql()
+  .then((result) => {
+    app.listen(PORT, () => console.log(`App is running on http://localhost:${PORT}`))
+  })
+  .catch((error: unknown) => {
+    console.error('error during connection to database(s)', error)
+    process.exit(1)
+  })
