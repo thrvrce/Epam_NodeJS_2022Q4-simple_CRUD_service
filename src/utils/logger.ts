@@ -31,3 +31,32 @@ export const logServiceWithPassedParams = (logger: Logger) => (req: Request, _: 
   })
   next()
 }
+export const uncaughtExceptionLogger = createLogger({
+  level: 'error',
+  format: format.combine(
+    format.timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss'
+    }),
+    format.errors({ stack: true }),
+    format.splat(),
+    format.json()
+  ),
+  transports: [
+    new transports.File({ filename: 'logs/uncaughtException.errors.log', level: 'error' })
+  ]
+})
+
+export const uncaughtRejectionLogger = createLogger({
+  level: 'error',
+  format: format.combine(
+    format.timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss'
+    }),
+    format.errors({ stack: true }),
+    format.splat(),
+    format.json()
+  ),
+  transports: [
+    new transports.File({ filename: 'logs/uncaughtRejection.errors.log', level: 'error' })
+  ]
+})
