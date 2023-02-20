@@ -5,8 +5,11 @@ import {
 } from '../../services/groups.service'
 import createHttpError from '../../utils/createHttpError'
 import { isError } from '../../utils/checkers'
+import { logServiceWithPassedParams, groupsServiceLogger } from '../../utils/logger'
 
 export const groupsRouter = Router()
+
+groupsRouter.use(logServiceWithPassedParams(groupsServiceLogger))
 
 groupsRouter.get('/', (req, res, next) => {
   getAllGroups()

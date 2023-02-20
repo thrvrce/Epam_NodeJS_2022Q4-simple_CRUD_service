@@ -5,9 +5,11 @@ import {
 } from '../../services/users.service'
 import createHttpError from '../../utils/createHttpError'
 import { isError, isNotNullish } from '../../utils/checkers'
+import { logServiceWithPassedParams, usersServiceLogger } from '../../utils/logger'
 
 export const usersRouter = Router()
 
+usersRouter.use(logServiceWithPassedParams(usersServiceLogger))
 usersRouter.get('/', (req, res, next) => {
   getAllUsers()
     .then(({ statusCode, payload }) => {

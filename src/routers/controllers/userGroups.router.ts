@@ -5,8 +5,11 @@ import {
 } from '../../services/userGroups.service'
 import createHttpError from '../../utils/createHttpError'
 import { isError } from '../../utils/checkers'
+import { logServiceWithPassedParams, userGroupsServiceLogger } from '../../utils/logger'
 
 export const userGroupsRouter = Router()
+
+userGroupsRouter.use(logServiceWithPassedParams(userGroupsServiceLogger))
 
 userGroupsRouter.get('/', (req, res, next) => {
   getAllUserGroups()
