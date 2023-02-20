@@ -5,11 +5,12 @@ import {
 } from '../../services/users.service'
 import createHttpError from '../../utils/createHttpError'
 import { isError, isNotNullish } from '../../utils/checkers'
-import { logServiceWithPassedParams, usersServiceLogger } from '../../utils/logger'
+import { logServiceInfo, logServiceError, usersServiceLogger } from '../../utils/logger'
 
 export const usersRouter = Router()
 
-usersRouter.use(logServiceWithPassedParams(usersServiceLogger))
+usersRouter.use(logServiceInfo(usersServiceLogger))
+
 usersRouter.get('/', (req, res, next) => {
   getAllUsers()
     .then(({ statusCode, payload }) => {
@@ -75,3 +76,5 @@ usersRouter.get('/AutoSuggestUsers', (req, res, next) => {
     next(createHttpError(422, 'Incorrect request parameters'))
   }
 })
+
+usersRouter.use(logServiceError(usersServiceLogger))

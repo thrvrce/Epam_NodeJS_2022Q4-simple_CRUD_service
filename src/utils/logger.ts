@@ -17,10 +17,12 @@ const createServiceLogger = (serviceName: string) => createLogger({
     new transports.File({ filename: `logs/${serviceName}.service.combined.log` })
   ]
 })
+
 export const usersServiceLogger = createServiceLogger('users')
 export const groupsServiceLogger = createServiceLogger('groups')
 export const userGroupsServiceLogger = createServiceLogger('userGroups')
-export const logServiceWithPassedParams = (logger: Logger) => (req: Request, _: unknown, next: NextFunction) => {
+
+export const logServiceInfo = (logger: Logger) => (req: Request, _: unknown, next: NextFunction) => {
   logger.log({
     level: 'info',
     message: `service ${logger.defaultMeta.service as string} call log`,
@@ -31,6 +33,21 @@ export const logServiceWithPassedParams = (logger: Logger) => (req: Request, _: 
   })
   next()
 }
+
+export const logServiceError = (logger: Logger) => (error: unknown, req: Request, _: unknown, next: NextFunction) => {
+  logger.log({
+    level: 'error',
+    message: `service ${logger.defaultMeta.service as string} error log`,
+    requestMethod: req.method,
+    requestParams: req.params,
+    requestQueryStringParams: req.query,
+    requestBody: req.body,
+    errorMessage: typeof error === 'object' && (error != null) && 'message' in error ? error.message : 'unknown error',
+    error
+  })
+  next(error)
+}
+
 export const uncaughtExceptionLogger = createLogger({
   level: 'error',
   format: format.combine(

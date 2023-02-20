@@ -5,11 +5,11 @@ import {
 } from '../../services/userGroups.service'
 import createHttpError from '../../utils/createHttpError'
 import { isError } from '../../utils/checkers'
-import { logServiceWithPassedParams, userGroupsServiceLogger } from '../../utils/logger'
+import { logServiceInfo, logServiceError, userGroupsServiceLogger } from '../../utils/logger'
 
 export const userGroupsRouter = Router()
 
-userGroupsRouter.use(logServiceWithPassedParams(userGroupsServiceLogger))
+userGroupsRouter.use(logServiceInfo(userGroupsServiceLogger))
 
 userGroupsRouter.get('/', (req, res, next) => {
   getAllUserGroups()
@@ -30,3 +30,5 @@ userGroupsRouter.post('/group/:groupId', (req, res, next) => {
       next(createHttpError(500, 'Internal Server Error', isError(error) ? error : undefined))
     })
 })
+
+userGroupsRouter.use(logServiceError(userGroupsServiceLogger))
