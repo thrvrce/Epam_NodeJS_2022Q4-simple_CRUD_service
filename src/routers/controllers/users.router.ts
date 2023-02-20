@@ -5,11 +5,11 @@ import {
 } from '../../services/users.service'
 import createHttpError from '../../utils/createHttpError'
 import { isError, isNotNullish } from '../../utils/checkers'
-import { logServiceInfo, logServiceError, usersServiceLogger } from '../../utils/logger'
+import { logControllerInfo, logControllerError, usersControllerLogger } from '../../utils/logger'
 
 export const usersRouter = Router()
 
-usersRouter.use(logServiceInfo(usersServiceLogger))
+usersRouter.use(logControllerInfo(usersControllerLogger))
 
 usersRouter.get('/', (req, res, next) => {
   getAllUsers()
@@ -77,4 +77,4 @@ usersRouter.get('/AutoSuggestUsers', (req, res, next) => {
   }
 })
 
-usersRouter.use(logServiceError(usersServiceLogger))
+usersRouter.use(logControllerError(usersControllerLogger))

@@ -1,7 +1,7 @@
 import { createLogger, format, transports, Logger } from 'winston'
 import { Request, NextFunction } from 'express'
 
-const createServiceLogger = (serviceName: string) => createLogger({
+const createControllerLogger = (controllerName: string) => createLogger({
   level: 'info',
   format: format.combine(
     format.timestamp({
@@ -11,21 +11,22 @@ const createServiceLogger = (serviceName: string) => createLogger({
     format.splat(),
     format.json()
   ),
-  defaultMeta: { service: serviceName },
+  defaultMeta: { controller: controllerName },
   transports: [
-    new transports.File({ filename: `logs/${serviceName}.service.errors.log`, level: 'error' }),
-    new transports.File({ filename: `logs/${serviceName}.service.combined.log` })
+    new transports.File({ filename: `logs/${controllerName}.controller.errors.log`, level: 'error' }),
+    new transports.File({ filename: `logs/${controllerName}.controller.combined.log` }),
+    new transports.Console()
   ]
 })
 
-export const usersServiceLogger = createServiceLogger('users')
-export const groupsServiceLogger = createServiceLogger('groups')
-export const userGroupsServiceLogger = createServiceLogger('userGroups')
+export const usersControllerLogger = createControllerLogger('users')
+export const groupsControllerLogger = createControllerLogger('groups')
+export const userGroupsControllerLogger = createControllerLogger('userGroups')
 
-export const logServiceInfo = (logger: Logger) => (req: Request, _: unknown, next: NextFunction) => {
+export const logControllerInfo = (logger: Logger) => (req: Request, _: unknown, next: NextFunction) => {
   logger.log({
     level: 'info',
-    message: `service ${logger.defaultMeta.service as string} call log`,
+    message: `Controller ${logger.defaultMeta.controller as string} call log`,
     requestMethod: req.method,
     requestParams: req.params,
     requestQueryStringParams: req.query,
@@ -34,10 +35,10 @@ export const logServiceInfo = (logger: Logger) => (req: Request, _: unknown, nex
   next()
 }
 
-export const logServiceError = (logger: Logger) => (error: unknown, req: Request, _: unknown, next: NextFunction) => {
+export const logControllerError = (logger: Logger) => (error: unknown, req: Request, _: unknown, next: NextFunction) => {
   logger.log({
     level: 'error',
-    message: `service ${logger.defaultMeta.service as string} error log`,
+    message: `Controller ${logger.defaultMeta.controller as string} error log`,
     requestMethod: req.method,
     requestParams: req.params,
     requestQueryStringParams: req.query,

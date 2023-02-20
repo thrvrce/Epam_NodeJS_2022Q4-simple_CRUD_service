@@ -5,11 +5,11 @@ import {
 } from '../../services/userGroups.service'
 import createHttpError from '../../utils/createHttpError'
 import { isError } from '../../utils/checkers'
-import { logServiceInfo, logServiceError, userGroupsServiceLogger } from '../../utils/logger'
+import { logControllerInfo, logControllerError, userGroupsControllerLogger } from '../../utils/logger'
 
 export const userGroupsRouter = Router()
 
-userGroupsRouter.use(logServiceInfo(userGroupsServiceLogger))
+userGroupsRouter.use(logControllerInfo(userGroupsControllerLogger))
 
 userGroupsRouter.get('/', (req, res, next) => {
   getAllUserGroups()
@@ -31,4 +31,4 @@ userGroupsRouter.post('/group/:groupId', (req, res, next) => {
     })
 })
 
-userGroupsRouter.use(logServiceError(userGroupsServiceLogger))
+userGroupsRouter.use(logControllerError(userGroupsControllerLogger))

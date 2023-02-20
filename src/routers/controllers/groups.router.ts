@@ -5,11 +5,11 @@ import {
 } from '../../services/groups.service'
 import createHttpError from '../../utils/createHttpError'
 import { isError } from '../../utils/checkers'
-import { logServiceInfo, logServiceError, groupsServiceLogger } from '../../utils/logger'
+import { logControllerInfo, logControllerError, groupsControllerLogger } from '../../utils/logger'
 
 export const groupsRouter = Router()
 
-groupsRouter.use(logServiceInfo(groupsServiceLogger))
+groupsRouter.use(logControllerInfo(groupsControllerLogger))
 
 groupsRouter.get('/', (req, res, next) => {
   getAllGroups()
@@ -61,4 +61,4 @@ groupsRouter.delete('/group/:groupId', (req, res, next) => {
     })
 })
 
-groupsRouter.use(logServiceError(groupsServiceLogger))
+groupsRouter.use(logControllerError(groupsControllerLogger))
