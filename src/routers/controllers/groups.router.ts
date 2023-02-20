@@ -5,8 +5,11 @@ import {
 } from '../../services/groups.service'
 import createHttpError from '../../utils/createHttpError'
 import { isError } from '../../utils/checkers'
+import { logControllerInfo, logControllerError, groupsControllerLogger } from '../../utils/logger'
 
 export const groupsRouter = Router()
+
+groupsRouter.use(logControllerInfo(groupsControllerLogger))
 
 groupsRouter.get('/', (req, res, next) => {
   getAllGroups()
@@ -57,3 +60,5 @@ groupsRouter.delete('/group/:groupId', (req, res, next) => {
       next(createHttpError(500, 'Internal Server Error', isError(error) ? error : undefined))
     })
 })
+
+groupsRouter.use(logControllerError(groupsControllerLogger))

@@ -1,13 +1,17 @@
-import express, { NextFunction, Response, Request } from 'express'
+import express from 'express'
 
 import { usersRouter } from './routers/controllers/users.router'
 import { groupsRouter } from './routers/controllers/groups.router'
 import { userGroupsRouter } from './routers/controllers/userGroups.router'
-import createHttpError, { isErrorWithStatus } from './utils/createHttpError'
+import createHttpError from './utils/createHttpError'
 import { connectToSequelizePostgresql } from './loaders/database/database'
 import { Users } from './models/users.model'
 import { Groups } from './models/groups.model'
 import { UserGroups } from './models/userGroups.model'
+import { defaultUnhandledErrorhandler, uncaughtExceptionErrorHandler, unhandledRejectionErrorHandler } from './utils/error.handlers'
+
+process.on('uncaughtException', uncaughtExceptionErrorHandler)
+process.on('unhandledRejection', unhandledRejectionErrorHandler)
 
 const PORT = 3000
 const app = express()
@@ -26,16 +30,7 @@ app.use('/userGroups', userGroupsRouter)
 app.use((req, res, next) => {
   next(createHttpError(404, 'route was not found'))
 })
-app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
-  if (isErrorWithStatus(err)) {
-    res.status(err.status)
-    res.json({ message: err.message })
-  } else {
-    const message = err instanceof Error ? err.message : 'Unknown error'
-    res.status(500)
-    res.json({ message })
-  }
-})
+app.use(defaultUnhandledErrorhandler)
 
 connectToSequelizePostgresql()
   .then(async () => {
