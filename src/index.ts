@@ -3,6 +3,7 @@ import express from 'express'
 import { usersRouter } from './routers/controllers/users.router'
 import { groupsRouter } from './routers/controllers/groups.router'
 import { userGroupsRouter } from './routers/controllers/userGroups.router'
+import { authRouter } from './routers/controllers/auth.router'
 import createHttpError from './utils/createHttpError'
 import { connectToSequelizePostgresql } from './loaders/database/database'
 import { Users } from './models/users.model'
@@ -24,6 +25,7 @@ app.use('/', (req, res, next) => {
     next()
   }
 })
+app.use('/', authRouter)
 app.use('/users', usersRouter)
 app.use('/groups', groupsRouter)
 app.use('/userGroups', userGroupsRouter)
