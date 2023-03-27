@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 
 import { usersRouter } from './routers/controllers/users.router'
 import { groupsRouter } from './routers/controllers/groups.router'
@@ -17,7 +18,7 @@ process.on('unhandledRejection', unhandledRejectionErrorHandler)
 
 const PORT = 3000
 const app = express()
-
+app.use(cors())
 app.use(express.json())
 app.use(checkAuthorizationHeader)
 app.use('/', (req, res, next) => {
