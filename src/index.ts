@@ -1,22 +1,26 @@
 import express from 'express'
+import cors from 'cors'
 
 import { usersRouter } from './routers/controllers/users.router'
 import { groupsRouter } from './routers/controllers/groups.router'
 import { userGroupsRouter } from './routers/controllers/userGroups.router'
+import { authRouter } from './routers/controllers/auth.router'
 import createHttpError from './utils/createHttpError'
 import { connectToSequelizePostgresql } from './loaders/database/database'
 import { Users } from './models/users.model'
 import { Groups } from './models/groups.model'
 import { UserGroups } from './models/userGroups.model'
 import { defaultUnhandledErrorhandler, uncaughtExceptionErrorHandler, unhandledRejectionErrorHandler } from './utils/error.handlers'
+import { checkAuthorizationHeader } from './utils/checkers'
 
 process.on('uncaughtException', uncaughtExceptionErrorHandler)
 process.on('unhandledRejection', unhandledRejectionErrorHandler)
 
 const PORT = 3000
 const app = express()
-
+app.use(cors())
 app.use(express.json())
+app.use(checkAuthorizationHeader)
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
     res.send('Service is running!')
@@ -24,6 +28,7 @@ app.use('/', (req, res, next) => {
     next()
   }
 })
+app.use('/', authRouter)
 app.use('/users', usersRouter)
 app.use('/groups', groupsRouter)
 app.use('/userGroups', userGroupsRouter)
