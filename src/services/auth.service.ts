@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 
 import { getAllUsers } from './users.service'
 
-const notSoSecretSecret = 'notSoSecretSecret'
+export const notSoSecretSecret = 'notSoSecretSecret'
 
 export const login = async (loginConfig: unknown) => {
   if (typeof loginConfig !== 'object' || loginConfig === null || Array.isArray(loginConfig)) {

@@ -10,6 +10,7 @@ import { Users } from './models/users.model'
 import { Groups } from './models/groups.model'
 import { UserGroups } from './models/userGroups.model'
 import { defaultUnhandledErrorhandler, uncaughtExceptionErrorHandler, unhandledRejectionErrorHandler } from './utils/error.handlers'
+import { checkAuthorizationHeader } from './utils/checkers'
 
 process.on('uncaughtException', uncaughtExceptionErrorHandler)
 process.on('unhandledRejection', unhandledRejectionErrorHandler)
@@ -18,6 +19,7 @@ const PORT = 3000
 const app = express()
 
 app.use(express.json())
+app.use(checkAuthorizationHeader)
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
     res.send('Service is running!')

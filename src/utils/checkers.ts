@@ -1,6 +1,10 @@
 import Joi from 'joi'
+import jwt from 'jsonwebtoken'
+
 import { NewUserConfig } from '../models/users.model'
 import { NewGroupConfig, GroupPermissions } from '../models/groups.model'
+import { Request, Response, NextFunction } from 'express'
+import { notSoSecretSecret } from '../services/auth.service'
 
 export const isNotNullish = <T>(payload: T | null | undefined): payload is T => payload !== undefined && payload !== null
 
@@ -45,3 +49,23 @@ export const isValidCreateGroupBody = Joi.object<NewGroupConfig>().keys({
 })
 
 export const isValidUpdateGroupBody = isValidCreateGroupBody
+
+export const checkAuthorizationHeader = (req: Request, res: Response, next: NextFunction) => {
+  if (req.originalUrl === '/login') {
+    return next()
+  }
+
+  const token = req.header('Authorization')
+
+  if (token === undefined) {
+    return res.status(401).send({ success: false, message: 'no token provided' })
+  }
+
+  jwt.verify(token, notSoSecretSecret, (err) => {
+    if (err != null) {
+      return res.status(403).send({ success: false, message: 'Failed to authenticate token' })
+    }
+
+    next()
+  })
+}
