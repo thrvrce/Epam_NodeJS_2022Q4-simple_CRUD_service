@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import { NewUserConfig } from '../models/users.model'
 import { NewGroupConfig, GroupPermissions } from '../models/groups.model'
 import { Request, Response, NextFunction } from 'express'
-import { notSoSecretSecret } from '../services/auth.service'
+import { secret } from '../services/auth.service'
 
 export const isNotNullish = <T>(payload: T | null | undefined): payload is T => payload !== undefined && payload !== null
 
@@ -61,7 +61,7 @@ export const checkAuthorizationHeader = (req: Request, res: Response, next: Next
     return res.status(401).send({ success: false, message: 'no token provided' })
   }
 
-  jwt.verify(token, notSoSecretSecret, (err) => {
+  jwt.verify(token, secret, (err) => {
     if (err != null) {
       return res.status(403).send({ success: false, message: 'Failed to authenticate token' })
     }

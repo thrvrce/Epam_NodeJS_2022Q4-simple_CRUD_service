@@ -1,9 +1,11 @@
 
 import jwt from 'jsonwebtoken'
-
+import * as dotenv from 'dotenv'
 import { getAllUsers } from './users.service'
 
-export const notSoSecretSecret = 'notSoSecretSecret'
+dotenv.config()
+
+export const secret = process.env.AUTH_SECRET ?? ''
 
 export const login = async (loginConfig: unknown) => {
   if (typeof loginConfig !== 'object' || loginConfig === null || Array.isArray(loginConfig)) {
@@ -27,7 +29,7 @@ export const login = async (loginConfig: unknown) => {
     return { statusCode: 401, payload: { success: false, message: 'Bad login\\password combination' } }
   }
 
-  const token = jwt.sign({ sub: user.id }, notSoSecretSecret, { expiresIn: 120 })
+  const token = jwt.sign({ sub: user.id }, secret, { expiresIn: 120 })
 
   return { statusCode: 200, payload: { success: true, token } }
 }
