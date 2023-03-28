@@ -40,7 +40,7 @@ export const createNewGroup = async (newGroupConfig: unknown) => {
 
   try {
     const newGroup = await Groups.create(value)
-    return { statusCode: 201, payload: { newUser: newGroup.dataValues } }
+    return { statusCode: 201, payload: { newGroup: newGroup.dataValues } }
   } catch (error) {
     throw new Error('Sequelize error during createNewGroup execution')
   }
@@ -89,7 +89,7 @@ export const deleteGroupById = async (id: string) => {
 
     await group.destroy()
 
-    return { statusCode: 204, payload: { message: `group with id ${id} already was deleted` } }
+    return { statusCode: 204, payload: { message: `group with id ${id} was deleted` } }
   } catch (error) {
     throw new Error('Sequelize error during deleteGroupById execution')
   }
