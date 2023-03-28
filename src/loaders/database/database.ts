@@ -1,7 +1,8 @@
 import { Sequelize } from 'sequelize'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
-// todo move to .env vars when time comes
-export const sequelizePostgresql = new Sequelize('NodeJs2022Q4', 'postgres', 'postgres_password', {
+export const sequelizePostgresql = new Sequelize(process.env.DATA_BASE ?? '', process.env.DATA_BASE_USER_NAME ?? '', process.env.DATA_BASE_PASSWORD ?? '', {
   host: 'localhost',
   dialect: 'postgres'
 })
@@ -9,7 +10,7 @@ export const sequelizePostgresql = new Sequelize('NodeJs2022Q4', 'postgres', 'po
 export const connectToSequelizePostgresql = async () => {
   try {
     await sequelizePostgresql.authenticate()
-    console.error('sequelizePostgresql authenticated')
+    console.log('sequelizePostgresql authenticated')
   } catch (error) {
     console.error('sequelizePostgresql not authenticated')
     throw error
