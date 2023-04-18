@@ -30,7 +30,7 @@
     "build": "tsc",
     "check:code": "eslint ./src",
     "check:types": "tsc",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
